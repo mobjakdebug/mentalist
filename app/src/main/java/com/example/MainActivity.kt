@@ -251,8 +251,4 @@ fun SiahBaziApp(viewModel: GameViewModel) {
             onDismiss = { viewModel.closeQuestsDialog() }
         )
     }
-
-    if (uiState.showQuestionBankDialog) {
-        QuestionBankDialog(onDismiss = { viewModel.closeQuestionBankDialog() })
-    }
 }

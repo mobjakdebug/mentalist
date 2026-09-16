@@ -67,6 +67,9 @@ interface QuestDao {
     @Query("SELECT * FROM daily_quests")
     fun getAllQuestsFlow(): Flow<List<DailyQuestEntity>>
 
+    @Query("SELECT * FROM daily_quests")
+    suspend fun getAllQuests(): List<DailyQuestEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(quests: List<DailyQuestEntity>)
 

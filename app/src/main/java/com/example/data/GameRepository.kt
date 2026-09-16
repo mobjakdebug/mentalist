@@ -327,24 +327,45 @@ class GameRepository(context: Context) {
     }
 
     private suspend fun updateQuestsProgress(bluffs: Int, correctGuesses: Int, matches: Int) {
-        val entities = getDefaultQuests().map { it.toEntity() }
-        entities.forEach { entity ->
+        val existing = questDao.getAllQuests().ifEmpty {
+            val defaults = getDefaultQuests().map { it.toEntity() }
+            questDao.insertAll(defaults)
+            defaults
+        }
+
+        existing.forEach { entity ->
             val added = when (entity.id) {
                 "q_bluff" -> bluffs
                 "q_guess" -> correctGuesses
                 "q_match" -> matches
                 else -> 0
             }
-            if (added > 0) {
+            if (added > 0 && !entity.isClaimed) {
                 val newProgress = (entity.currentProgress + added).coerceAtMost(entity.targetProgress)
                 questDao.updateQuest(entity.copy(currentProgress = newProgress))
             }
         }
     }
 
-    suspend fun claimQuest(questId: String, xpReward: Int) {
+    suspend fun claimQuest(questId: String, xpReward: Int, coinsReward: Int = 100) {
         val current = userDao.getUserProfile() ?: return
-        userDao.insertOrUpdate(current.copy(xp = current.xp + xpReward, level = ((current.xp + xpReward) / 100) + 1))
+        val quests = questDao.getAllQuests()
+        val quest = quests.find { it.id == questId } ?: return
+        if (quest.isClaimed || quest.currentProgress < quest.targetProgress) return
+
+        // Mark quest as claimed in local database
+        questDao.updateQuest(quest.copy(isClaimed = true))
+
+        val newXp = current.xp + xpReward
+        val newLevel = (newXp / 100) + 1
+        val newCoins = current.coins + coinsReward
+        userDao.insertOrUpdate(
+            current.copy(
+                xp = newXp,
+                level = newLevel,
+                coins = newCoins
+            )
+        )
     }
 
     suspend fun reportUser(reportedName: String, messageText: String, reason: String) {
