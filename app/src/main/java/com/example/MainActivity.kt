@@ -99,8 +99,6 @@ fun SiahBaziApp(viewModel: GameViewModel) {
                 when (phase) {
                     GamePhase.AUTH -> {
                         AuthScreen(
-                            d1State = uiState.d1ConnectionState,
-                            workerUrl = uiState.workerUrl,
                             isLoading = uiState.isAuthLoading,
                             errorMessage = uiState.authErrorMessage,
                             onRegister = { username, email, password, avatar ->
@@ -108,9 +106,7 @@ fun SiahBaziApp(viewModel: GameViewModel) {
                             },
                             onLogin = { username, password ->
                                 viewModel.login(username, password)
-                            },
-                            onOpenD1Settings = { viewModel.openD1ConfigDialog() },
-                            onOpenD1Guide = { viewModel.openD1GuideDialog() }
+                            }
                         )
                     }
 
@@ -120,15 +116,11 @@ fun SiahBaziApp(viewModel: GameViewModel) {
                             HomeScreen(
                                 userProfile = profile,
                                 badges = uiState.badges,
-                                d1State = uiState.d1ConnectionState,
-                                workerUrl = uiState.workerUrl,
                                 publicRooms = uiState.publicRooms,
                                 isRefreshingRooms = uiState.isRefreshingRooms,
                                 onCreateRoom = { viewModel.createRoom() },
                                 onOpenJoinDialog = { viewModel.openJoinRoomDialog(it) },
                                 onRefreshRooms = { viewModel.refreshD1Data() },
-                                onOpenD1Settings = { viewModel.openD1ConfigDialog() },
-                                onOpenD1Guide = { viewModel.openD1GuideDialog() },
                                 onOpenQuests = { viewModel.openQuestsDialog() },
                                 onOpenQuestions = { viewModel.openQuestionBankDialog() },
                                 onOpenRules = { viewModel.openRulesDialog() },
@@ -136,8 +128,6 @@ fun SiahBaziApp(viewModel: GameViewModel) {
                             )
                         } else {
                             AuthScreen(
-                                d1State = uiState.d1ConnectionState,
-                                workerUrl = uiState.workerUrl,
                                 isLoading = uiState.isAuthLoading,
                                 errorMessage = uiState.authErrorMessage,
                                 onRegister = { username, email, password, avatar ->
@@ -145,9 +135,7 @@ fun SiahBaziApp(viewModel: GameViewModel) {
                                 },
                                 onLogin = { username, password ->
                                     viewModel.login(username, password)
-                                },
-                                onOpenD1Settings = { viewModel.openD1ConfigDialog() },
-                                onOpenD1Guide = { viewModel.openD1GuideDialog() }
+                                }
                             )
                         }
                     }
@@ -232,24 +220,6 @@ fun SiahBaziApp(viewModel: GameViewModel) {
     }
 
     // Modal Dialogs
-    if (uiState.showD1ConfigDialog) {
-        D1SettingsDialog(
-            initialUrl = uiState.workerUrl,
-            connectionState = uiState.d1ConnectionState,
-            onSaveUrl = { viewModel.saveWorkerUrl(it) },
-            onTestConnection = { viewModel.refreshD1Data() },
-            onOpenGuide = {
-                viewModel.closeD1ConfigDialog()
-                viewModel.openD1GuideDialog()
-            },
-            onDismiss = { viewModel.closeD1ConfigDialog() }
-        )
-    }
-
-    if (uiState.showD1GuideDialog) {
-        D1GuideDialog(onDismiss = { viewModel.closeD1GuideDialog() })
-    }
-
     if (uiState.showJoinRoomDialog) {
         JoinRoomDialog(
             initialCode = uiState.roomCodeInput,

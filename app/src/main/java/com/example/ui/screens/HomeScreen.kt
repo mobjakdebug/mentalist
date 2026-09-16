@@ -38,19 +38,19 @@ import com.example.ui.theme.*
 fun HomeScreen(
     userProfile: UserProfileEntity,
     badges: List<GameBadge>,
-    d1State: D1ConnectionState,
-    workerUrl: String,
     publicRooms: List<D1RoomSummary>,
     isRefreshingRooms: Boolean,
     onCreateRoom: () -> Unit,
     onOpenJoinDialog: (String) -> Unit,
     onRefreshRooms: () -> Unit,
-    onOpenD1Settings: () -> Unit,
-    onOpenD1Guide: () -> Unit,
     onOpenQuests: () -> Unit,
     onOpenQuestions: () -> Unit,
     onOpenRules: () -> Unit,
     onLogout: () -> Unit,
+    d1State: D1ConnectionState? = null,
+    workerUrl: String? = null,
+    onOpenD1Settings: (() -> Unit)? = null,
+    onOpenD1Guide: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val rank = RankTier.fromLevel(userProfile.level)
@@ -117,27 +117,22 @@ fun HomeScreen(
                     }
                 }
 
-                // Header Action Pill (D1 Status + Logout)
+                // Header Action Pill (Server Status + Logout)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // D1 Status Badge
+                    // Live Server Status Badge
                     Surface(
                         shape = RoundedCornerShape(12.dp),
-                        color = Color(0xFF171A2B),
+                        color = Color(0xFF131728),
                         border = androidx.compose.foundation.BorderStroke(
                             1.dp,
-                            when (d1State) {
-                                is D1ConnectionState.Connected -> SuccessGreen.copy(alpha = 0.6f)
-                                is D1ConnectionState.Checking -> GoldAccent.copy(alpha = 0.6f)
-                                else -> CrimsonPrimary.copy(alpha = 0.6f)
-                            }
+                            SuccessGreen.copy(alpha = 0.5f)
                         ),
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
-                            .clickable(onClick = onOpenD1Settings)
-                            .testTag("btn_d1_status_badge")
+                            .testTag("server_status_badge")
                     ) {
                         Row(
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
@@ -147,21 +142,11 @@ fun HomeScreen(
                                 modifier = Modifier
                                     .size(8.dp)
                                     .clip(CircleShape)
-                                    .background(
-                                        when (d1State) {
-                                            is D1ConnectionState.Connected -> SuccessGreen
-                                            is D1ConnectionState.Checking -> GoldAccent
-                                            else -> CrimsonPrimary
-                                        }
-                                    )
+                                    .background(SuccessGreen)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = when (d1State) {
-                                    is D1ConnectionState.Connected -> "${d1State.latencyMs}ms"
-                                    is D1ConnectionState.Checking -> "بررسی"
-                                    else -> "D1 آفلاین"
-                                },
+                                text = "سرور آنلاین",
                                 color = Color.White,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold
@@ -528,7 +513,7 @@ fun HomeScreen(
                         Text(text = "🌐", fontSize = 36.sp)
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "هیچ اتاق عمومی فعالی در دیتابیس D1 یافت نشد",
+                            text = "در حال حاضر هیچ اتاق عمومی فعالی وجود ندارد",
                             color = Color.LightGray,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Medium,
@@ -536,7 +521,7 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            text = "همین حالا اولین اتاق را بسازید و دوستانتان را دعوت کنید!",
+                            text = "همین حالا اولین اتاق بازی را بسازید یا با کد اختصاصی وارد شوید!",
                             color = Color.Gray,
                             fontSize = 11.sp,
                             textAlign = TextAlign.Center
@@ -668,12 +653,12 @@ fun HomeScreen(
                     testTag = "btn_game_rules"
                 )
                 UtilityCard(
-                    icon = "☁️",
-                    title = "راهنمای D1",
-                    subtitle = "مستندات کلودفلر",
-                    onClick = onOpenD1Guide,
+                    icon = "🧠",
+                    title = "بانک سوالات",
+                    subtitle = "۱۰۰ سوال روانشناسی",
+                    onClick = onOpenQuestions,
                     modifier = Modifier.weight(1f),
-                    testTag = "btn_d1_guide_home"
+                    testTag = "btn_questions_home"
                 )
             }
         }

@@ -46,14 +46,14 @@ enum class AuthMode {
 
 @Composable
 fun AuthScreen(
-    d1State: D1ConnectionState,
-    workerUrl: String,
     isLoading: Boolean,
     errorMessage: String?,
     onRegister: (username: String, email: String?, password: String, avatar: String) -> Unit,
     onLogin: (username: String, password: String) -> Unit,
-    onOpenD1Settings: () -> Unit,
-    onOpenD1Guide: () -> Unit,
+    d1State: D1ConnectionState? = null,
+    workerUrl: String? = null,
+    onOpenD1Settings: (() -> Unit)? = null,
+    onOpenD1Guide: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     var authMode by remember { mutableStateOf(AuthMode.REGISTER) }
@@ -429,79 +429,39 @@ fun AuthScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
-            // D1 Server Status and Config
-            Surface(
-                shape = RoundedCornerShape(14.dp),
-                color = Color(0xFF141726),
-                border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.06f)),
-                modifier = Modifier.fillMaxWidth()
+            // Official Game Security & Production Footer
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .size(10.dp)
-                                .clip(CircleShape)
-                                .background(
-                                    when (d1State) {
-                                        is D1ConnectionState.Connected -> SuccessGreen
-                                        is D1ConnectionState.Checking -> GoldAccent
-                                        else -> CrimsonPrimary
-                                    }
-                                )
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = when (d1State) {
-                                is D1ConnectionState.Connected -> "سرور D1 متصل است (${d1State.latencyMs}ms)"
-                                is D1ConnectionState.Checking -> "در حال بررسی دیتابیس D1..."
-                                else -> "دیتابیس Cloudflare D1"
-                            },
-                            color = Color.LightGray,
-                            fontSize = 11.sp
-                        )
-                    }
-
-                    Row {
-                        IconButton(
-                            onClick = onOpenD1Guide,
-                            modifier = Modifier
-                                .size(34.dp)
-                                .testTag("btn_auth_d1_guide")
-                        ) {
-                            Icon(
-                                Icons.Outlined.HelpOutline,
-                                contentDescription = "راهنما",
-                                tint = GoldAccent,
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
-                        IconButton(
-                            onClick = onOpenD1Settings,
-                            modifier = Modifier
-                                .size(34.dp)
-                                .testTag("btn_auth_d1_settings")
-                        ) {
-                            Icon(
-                                Icons.Outlined.Settings,
-                                contentDescription = "تنظیمات D1",
-                                tint = Color.LightGray,
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
-                    }
-                }
+                Icon(
+                    imageVector = Icons.Outlined.Lock,
+                    contentDescription = null,
+                    tint = GoldAccent.copy(alpha = 0.7f),
+                    modifier = Modifier.size(15.dp)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = "ارتباط ابری رمزنگاری‌شده • سرورهای اختصاصی سیاه‌بازی",
+                    color = Color.LightGray.copy(alpha = 0.75f),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium
+                )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "نسخه رسمی ۱.۰.۰ • پروژه روانشناسی منتالیست",
+                color = Color.Gray.copy(alpha = 0.6f),
+                fontSize = 10.sp,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

@@ -106,7 +106,7 @@ fun LobbyPhaseScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "کد دعوت به اتاق Cloudflare D1",
+                        text = "کد دعوت به اتاق بازی",
                         color = TextSecondaryDark,
                         fontSize = 12.sp
                     )
@@ -165,7 +165,7 @@ fun LobbyPhaseScreen(
                     color = Color(0xFF1B3B2B)
                 ) {
                     Text(
-                        text = "🟢 همگام با D1",
+                        text = "🟢 لابی آنلاین",
                         color = SuccessGreen,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Medium,
@@ -244,7 +244,7 @@ fun LobbyPhaseScreen(
                         .testTag("start_match_button")
                 ) {
                     Text(
-                        text = if (players.size >= 2) "شروع مسابقه در دیتابیس D1" else "در انتظار اتصال حداقل ۲ بازیکن...",
+                        text = if (players.size >= 2) "شروع بازی و بازجویی" else "در انتظار اتصال حداقل ۲ بازیکن...",
                         color = Color.White,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold
@@ -279,7 +279,7 @@ fun LobbyPhaseScreen(
         }
 
         Text(
-            text = "پس از شروع، سوال روانشناسی از جدول D1 دریافت خواهد شد",
+            text = "پس از شروع مسابقه، سوال محرمانه برای تمام بازیکنان ارسال می‌شود",
             color = TextMuted,
             fontSize = 11.sp
         )
