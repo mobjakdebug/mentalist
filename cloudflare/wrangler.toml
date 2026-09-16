@@ -1,0 +1,9 @@
+name = "siahbazi-backend"
+main = "worker.js"
+compatibility_date = "2024-09-01"
+
+# بایندینگ دیتابیس Cloudflare D1
+[[d1_databases]]
+binding = "DB"
+database_name = "siahbazi-db"
+database_id = "YOUR_D1_DATABASE_ID" # این شناسه را پس از اجرای دستور npx wrangler d1 create siahbazi-db اینجا قرار دهید

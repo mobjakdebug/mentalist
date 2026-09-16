@@ -1,0 +1,6 @@
+{
+  "name": "سیاه بازی",
+  "description": "بازی روانشناسی، مچ‌گیری و بلوف‌زنی چندنفره پروژه منتالیست",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
